@@ -21,9 +21,10 @@ class App():
         rst_file_content = self.rst_parser.add_raw_latex_rst_role(
             rst_file_content
         )
-        print('\n\nfile content with added rst role is:', rst_file_content)
         rst_file_content = self.rst_parser.parse(rst_file_content)
+        print('=============================================')
         print('\n\nfinished rst file content is:', rst_file_content)
+        print('=============================================')
         self.file_writer.write(rst_file_path + '.out', rst_file_content)
 
 

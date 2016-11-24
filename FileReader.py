@@ -9,5 +9,10 @@ class FileReader():
         lines = []
         with open(file_path, mode='rU') as opened_file:
             lines = opened_file.read().splitlines()
-        print('file content is:', lines)
+
+        print('====================')
+        print('ORIGINAL FILE CONTENT (LINES)')
+        for lineno, line in enumerate(lines):
+            print('LINE ' + str(lineno) + ':' + line)
+        print('====================')
         return lines
