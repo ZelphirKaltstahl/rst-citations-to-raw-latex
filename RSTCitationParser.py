@@ -15,14 +15,6 @@ class RSTCitationParser():
             \]                 # literal ]
             """, re.VERBOSE)
 
-        # self.citation_regex = re.compile(
-        #    r"""
-        #    \[        # literal [
-        #    (?<![#])    # negative lookbehind, no # may be before a citation key
-        #    [^]]+     # anything but closing ]
-        #    \]        # literal ]
-        #    """, re.VERBOSE)
-
     def add_raw_latex_rst_role(self, rst_file_content):
         rst_file_content.insert(0, '')
         rst_file_content.insert(0, '   :format: latex')
@@ -32,8 +24,9 @@ class RSTCitationParser():
     def parse(self, rst_file_content, references):
         print('findings:')
         for lineno, line in enumerate(rst_file_content):
-            print('line '+str(lineno)+':|'+line+'|')
-            print(re.findall(self.citation_regex, line))
+            all_matches = re.findall(self.citation_regex, line)
+            if all_matches:
+                print(all_matches)
 
         # \cite[p.~150]{kopka2003guide}
 

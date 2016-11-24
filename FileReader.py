@@ -8,7 +8,5 @@ class FileReader():
         lines = []
         print('now reading file', file_path)
         with open(file_path, mode='rU') as opened_file:
-            # opened_file.seek(0)
-            for line in opened_file:
-                lines.append(opened_file.readline().rstrip('\n'))
+            lines = opened_file.read().splitlines()
         return lines
