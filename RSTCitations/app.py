@@ -1,4 +1,5 @@
 import sys
+import os.path
 
 import RSTCitations.FileReader as FileReader
 import RSTCitations.FileWriter as FileWriter
@@ -16,16 +17,19 @@ class App():
         self.file_writer = FileWriter.FileWriter()
 
     def parse(self, rst_file_path):
-        print('called parse in app')
+        print('Now reading input file ...')
         rst_file_content = self.file_reader.read_file(rst_file_path)
+        print('Parsing input file ...')
         rst_file_content = self.rst_parser.add_raw_latex_rst_role(
             rst_file_content
         )
         rst_file_content = self.rst_parser.parse(rst_file_content)
-        print('=============================================')
-        print('\n\nfinished rst file content is:', rst_file_content)
-        print('=============================================')
+        # print('=============================================')
+        # print('\n\nfinished rst file content is:', rst_file_content)
+        # print('=============================================')
+        print('Writing output file ...')
         self.file_writer.write(rst_file_path + '.out', rst_file_content)
+        print('Successfully wrote output file.')
 
 
 def print_help():
@@ -38,8 +42,11 @@ def main(params):
         print_help()
     else:
         rst_file_path = params[1]
+        if not os.path.isfile(rst_file_path):
+            sys.exit('The file you specified does not exist or is not a file.')
+
         app = App()
-        print('App will work with file path:', rst_file_path)
+        # print('App will work with file path:', rst_file_path)
         app.parse(rst_file_path)
 
 

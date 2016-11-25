@@ -20,7 +20,7 @@ class RSTCitationParser():
             r"""
             [\s|^]+
             \[
-            (?P<citation_key>[a-zA-Z0-9]+)
+            (?P<citation_key>[a-zA-Z0-9_]+)
             \]
             _
             """, re.VERBOSE
@@ -51,7 +51,7 @@ class RSTCitationParser():
         for lineno, line in enumerate(rst_file_content):
             all_matches = list(re.finditer(self.citation_regex, line))
             if all_matches:
-                print('replacing line')
+                # print('replacing line')
                 line = self.replace_matches(line, all_matches)
                 rst_file_content[lineno] = line
         return rst_file_content
@@ -87,7 +87,7 @@ class RSTCitationParser():
                 print('"' + one_match.group() + '"')
                 print('citation is an unknown style of citation')
 
-            print('line with replaced citation is:', line)
+            # print('line with replaced citation is:', line)
 
         return line
 
