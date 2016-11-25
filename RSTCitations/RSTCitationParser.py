@@ -58,9 +58,10 @@ class RSTCitationParser():
     def replace_matches(self, line, matches):
         for one_match in matches:
             if self.citation_no_extra.match(one_match.group()):
-                citation_key = self.citation_no_extra.match(
-                    one_match.group()
-                ).group('citation_key')
+                citation_key = \
+                    self.citation_no_extra \
+                    .match(one_match.group()) \
+                    .group('citation_key')
 
                 latex_citation = self.create_latex_citation(citation_key)
                 rst_raw_latex_citation = self.latex_citation_to_rst_raw_latex_citation(
@@ -69,13 +70,15 @@ class RSTCitationParser():
                 line = line.replace(one_match.group(), rst_raw_latex_citation)
 
             elif self.citation_with_page_number.match(one_match.group()):
-                citation_key = self.citation_with_page_number.match(
-                    one_match.group()
-                ).group('citation_key')
+                citation_key = \
+                    self.citation_with_page_number \
+                    .match(one_match.group()) \
+                    .group('citation_key')
 
-                page_number = self.citation_with_page_number.match(
-                    one_match.group()
-                ).group('page_number')
+                page_number = \
+                    self.citation_with_page_number \
+                    .match(one_match.group()) \
+                    .group('page_number')
 
                 latex_citation = self.create_latex_citation(citation_key, page_number)
                 rst_raw_latex_citation = self.latex_citation_to_rst_raw_latex_citation(
