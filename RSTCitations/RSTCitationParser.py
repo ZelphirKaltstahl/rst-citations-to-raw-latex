@@ -105,6 +105,8 @@ class RSTCitationParser():
             return '\cite{' + citation_key + '}'
 
     def latex_citation_to_rst_raw_latex_citation(
-        self, latex_citation, one_match
+        self,
+        latex_citation,
+        one_match
     ):
         return one_match.group()[0] + ':raw-latex:`' + latex_citation + '`'
