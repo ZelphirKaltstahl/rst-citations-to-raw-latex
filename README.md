@@ -1,2 +1,5 @@
-# rst-pandoc-citations
-This repository contains a small Python program, which parses bib bibliographies and reStructuredText files to convert contained Pandoc citations into Latex citations, in order to enable them in the conversion from reStructuredText to PDF using Pandoc.
+# rst-citations-to-raw-latex
+
+This repository contains a Python 3 program, which parses reStructuredText files to convert contained citations into raw Latex citations, in order to enable them in the conversion from `reStructuredText` to `PDF` using `Pandoc` and `latexmk`. It also enables page numbers in citations for example written as follows:
+
+    [Source2010 p. 10]_

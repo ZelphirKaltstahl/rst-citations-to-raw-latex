@@ -24,9 +24,6 @@ class App():
             rst_file_content
         )
         rst_file_content = self.rst_parser.parse(rst_file_content)
-        # print('=============================================')
-        # print('\n\nfinished rst file content is:', rst_file_content)
-        # print('=============================================')
         print('Writing output file ...')
         self.file_writer.write(rst_file_path + '.out', rst_file_content)
         print('Successfully wrote output file.')
@@ -46,7 +43,6 @@ def main(params):
             sys.exit('The file you specified does not exist or is not a file.')
 
         app = App()
-        # print('App will work with file path:', rst_file_path)
         app.parse(rst_file_path)
 
 
