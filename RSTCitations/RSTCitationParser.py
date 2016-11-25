@@ -58,45 +58,46 @@ class RSTCitationParser():
     def replace_matches(self, line, matches):
         for one_match in matches:
             if self.citation_no_extra.match(one_match.group()):
-                citation_key = \
-                    self.citation_no_extra \
-                    .match(one_match.group()) \
-                    .group('citation_key')
-
-                latex_citation = self.create_latex_citation(
-                    citation_key
-                )
-                rst_raw_latex_citation = self.latex_citation_to_rst_raw_latex_citation(
-                    latex_citation,
-                    one_match
-                )
-                line = line.replace(one_match.group(), rst_raw_latex_citation)
-
+                line = self.replace_citation_no_extra_match(line, one_match)
             elif self.citation_with_page_number.match(one_match.group()):
-                citation_key = \
-                    self.citation_with_page_number \
-                    .match(one_match.group()) \
-                    .group('citation_key')
-
-                page_number = \
-                    self.citation_with_page_number \
-                    .match(one_match.group()) \
-                    .group('page_number')
-
-                latex_citation = self.create_latex_citation(
-                    citation_key,
-                    page_number
-                )
-                rst_raw_latex_citation = self.latex_citation_to_rst_raw_latex_citation(
-                    latex_citation,
-                    one_match
-                )
-                line = line.replace(one_match.group(), rst_raw_latex_citation)
+                line = self.replace_citation_with_page_numbers(line, one_match)
             else:
                 print('"' + one_match.group() + '"')
                 print('citation is an unknown style of citation')
-
         return line
+
+    def replace_citation_no_extra_match(self, line, one_match):
+        citation_key = \
+            self.citation_no_extra \
+                .match(one_match.group()) \
+                .group('citation_key')
+        latex_citation = self.create_latex_citation(citation_key)
+        rst_raw_latex_citation = self.latex_citation_to_rst_raw_latex_citation(
+            latex_citation,
+            one_match
+        )
+        return line.replace(one_match.group(), rst_raw_latex_citation)
+
+    def replace_citation_with_page_numbers(self, line, one_match):
+        citation_key = \
+            self.citation_with_page_number \
+            .match(one_match.group()) \
+            .group('citation_key')
+
+        page_number = \
+            self.citation_with_page_number \
+            .match(one_match.group()) \
+            .group('page_number')
+
+        latex_citation = self.create_latex_citation(
+            citation_key,
+            page_number
+        )
+        rst_raw_latex_citation = self.latex_citation_to_rst_raw_latex_citation(
+            latex_citation,
+            one_match
+        )
+        return line.replace(one_match.group(), rst_raw_latex_citation)
 
     def create_latex_citation(self, citation_key, page_number=None):
         if page_number:
