@@ -63,9 +63,12 @@ class RSTCitationParser():
                     .match(one_match.group()) \
                     .group('citation_key')
 
-                latex_citation = self.create_latex_citation(citation_key)
+                latex_citation = self.create_latex_citation(
+                    citation_key
+                )
                 rst_raw_latex_citation = self.latex_citation_to_rst_raw_latex_citation(
-                    latex_citation, one_match
+                    latex_citation,
+                    one_match
                 )
                 line = line.replace(one_match.group(), rst_raw_latex_citation)
 
@@ -80,9 +83,13 @@ class RSTCitationParser():
                     .match(one_match.group()) \
                     .group('page_number')
 
-                latex_citation = self.create_latex_citation(citation_key, page_number)
+                latex_citation = self.create_latex_citation(
+                    citation_key,
+                    page_number
+                )
                 rst_raw_latex_citation = self.latex_citation_to_rst_raw_latex_citation(
-                    latex_citation, one_match
+                    latex_citation,
+                    one_match
                 )
                 line = line.replace(one_match.group(), rst_raw_latex_citation)
             else:
