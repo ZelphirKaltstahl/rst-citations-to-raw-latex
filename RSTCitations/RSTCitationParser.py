@@ -62,7 +62,7 @@ class RSTCitationParser():
                     one_match.group()
                 ).group('citation_key')
 
-                latex_citation = '\cite{' + citation_key + '}'
+                latex_citation = self.create_latex_citation(citation_key)
                 rst_raw_latex_citation = self.latex_citation_to_rst_raw_latex_citation(
                     latex_citation, one_match
                 )
@@ -77,7 +77,7 @@ class RSTCitationParser():
                     one_match.group()
                 ).group('page_number')
 
-                latex_citation = '\cite[p. ' + page_number + ']{' + citation_key + '}'
+                latex_citation = self.create_latex_citation(citation_key, page_number)
                 rst_raw_latex_citation = self.latex_citation_to_rst_raw_latex_citation(
                     latex_citation, one_match
                 )
@@ -87,6 +87,12 @@ class RSTCitationParser():
                 print('citation is an unknown style of citation')
 
         return line
+
+    def create_latex_citation(self, citation_key, page_number=None):
+        if page_number:
+            return '\cite[p.~' + page_number + ']{' + citation_key + '}'
+        else:
+            return '\cite{' + citation_key + '}'
 
     def latex_citation_to_rst_raw_latex_citation(
         self, latex_citation, one_match
