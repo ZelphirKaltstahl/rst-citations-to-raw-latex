@@ -8,7 +8,7 @@ class RSTCitationParser():
         super().__init__()
         self.citation_regex = re.compile(
             r"""
-            [\s|^]+
+            [\s|^]*
             \[                 # literal [
             (?P<inner>         # named group 'inner' start
             [a-zA-Z0-9_., ]+   # allowed chars
@@ -18,7 +18,7 @@ class RSTCitationParser():
             """, re.VERBOSE)
         self.citation_no_extra = re.compile(
             r"""
-            [\s|^]+
+            [\s|^]*
             \[
             (?P<citation_key>[a-zA-Z0-9_]+)
             \]
@@ -27,7 +27,7 @@ class RSTCitationParser():
         )
         self.citation_with_page_number = re.compile(
             r"""
-            [\s|^]+
+            [\s|^]*
             \[
             (?P<citation_key>[a-zA-Z_]+[0-9]+)
             [,]?
@@ -36,6 +36,18 @@ class RSTCitationParser():
             [.]
             [ ]?
             (?P<page_number>[0-9]+)
+            \]
+            _
+            """, re.VERBOSE
+        )
+        self.citation_with_other_extra = re.compile(
+            r"""
+            [\s|^]*
+            \[
+            (?P<citation_key>[a-zA-Z_]+[0-9]+)
+            [,]?
+            [ ]+
+            (?P<other_extra>[a-zA-Z0-9 -.]+)
             \]
             _
             """, re.VERBOSE
@@ -56,11 +68,21 @@ class RSTCitationParser():
         return rst_file_content
 
     def replace_matches(self, line, matches):
+
+        if self.citation_no_extra.match(' [swan_interactivity_2001]_'):
+            print('no extra matches!')
+
         for one_match in matches:
+            print('found a match:|', one_match.group() ,'|', sep='')
             if self.citation_no_extra.match(one_match.group()):
+                print('no extra matches')
                 line = self.replace_citation_no_extra_match(line, one_match)
             elif self.citation_with_page_number.match(one_match.group()):
+                print('with page number matches')
                 line = self.replace_citation_with_page_numbers(line, one_match)
+            elif self.citation_with_other_extra.match(one_match.group()):
+                print('with other extra matches')
+                line = self.replace_citation_with_other_extra(line, one_match)
             else:
                 print('"' + one_match.group() + '"')
                 print('citation is an unknown style of citation')
@@ -71,7 +93,7 @@ class RSTCitationParser():
             self.citation_no_extra \
                 .match(one_match.group()) \
                 .group('citation_key')
-        latex_citation = self.create_latex_citation(citation_key)
+        latex_citation = self.create_latex_citation(citation_key, language='DE')
         rst_raw_latex_citation = self.latex_citation_to_rst_raw_latex_citation(
             latex_citation,
             one_match
@@ -91,7 +113,8 @@ class RSTCitationParser():
 
         latex_citation = self.create_latex_citation(
             citation_key,
-            page_number
+            page_number=page_number,
+            language='DE'
         )
         rst_raw_latex_citation = self.latex_citation_to_rst_raw_latex_citation(
             latex_citation,
@@ -99,9 +122,50 @@ class RSTCitationParser():
         )
         return line.replace(one_match.group(), rst_raw_latex_citation)
 
-    def create_latex_citation(self, citation_key, page_number=None):
+    def replace_citation_with_other_extra(self, line, one_match):
+        citation_key = \
+            self.citation_with_other_extra \
+            .match(one_match.group()) \
+            .group('citation_key')
+
+        other_extra = \
+            self.citation_with_other_extra \
+            .match(one_match.group()) \
+            .group('other_extra')
+
+        print('other extra is', other_extra)
+
+        latex_citation = self.create_latex_citation(
+            citation_key,
+            other_extra=other_extra,
+            language='DE'
+        )
+
+        print('latex_citation is', latex_citation)
+
+        rst_raw_latex_citation = self.latex_citation_to_rst_raw_latex_citation(
+            latex_citation,
+            one_match
+        )
+        return line.replace(one_match.group(), rst_raw_latex_citation)
+
+    def create_latex_citation(self, citation_key, page_number=None, other_extra=None, language='DE'):
+        if language == 'EN':
+            page_abbreviation = 'p.'
+        elif language == 'DE':
+            page_abbreviation = 'S.'
+        else:
+            page_abbreviation = 'p.'
+
+        extra = ""
         if page_number:
-            return '\cite[p.~' + page_number + ']{' + citation_key + '}'
+            extra += ''.join([page_abbreviation, '~', page_number])
+
+        if other_extra:
+            extra += other_extra
+
+        if page_number or other_extra:
+            return '\cite[' + extra + ']{' + citation_key + '}'
         else:
             return '\cite{' + citation_key + '}'
 
